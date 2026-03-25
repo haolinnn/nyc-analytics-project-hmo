@@ -90,9 +90,7 @@ sources:
           - name: landmark
             description: Nearby landmark or point of interest
 
-version: 2
-
-sources:
+# ===== RESTAURANT DATA =====
   - name: raw
     description: Raw data loaded from NYC Open Data (Restaurant Applications)
 
