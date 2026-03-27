@@ -3,12 +3,12 @@ WITH seating_types AS (
        seating_interest_sidewalk AS seating_interest,
 
        CASE 
-           WHEN LOWER(approved_for_sidewalk_seating) = 'yes' THEN TRUE
+           WHEN LOWER(approved_for_sidewalk) = 'yes' THEN TRUE
            ELSE FALSE
        END AS approved_for_sidewalk,
 
        CASE 
-           WHEN LOWER(approved_for_roadway_seating) = 'yes' THEN TRUE
+           WHEN LOWER(approved_for_roadway) = 'yes' THEN TRUE
            ELSE FALSE
        END AS approved_for_roadway
 
@@ -19,7 +19,7 @@ WITH seating_types AS (
 seating_dimension AS (
    SELECT
        {{ dbt_utils.generate_surrogate_key([
-           'seating_interest_sidewalk',
+           'seating_interest',
            'approved_for_sidewalk',
            'approved_for_roadway'
        ]) }} AS seating_type_key,
