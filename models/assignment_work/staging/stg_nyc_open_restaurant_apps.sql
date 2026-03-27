@@ -1,3 +1,7 @@
+-- models/stg_nyc_open_restaurant_apps.sql
+
+{{ config(materialized='table') }}
+
 -- Clean and standardize NYC Open Restaurant Applications data
 -- One row per restaurant application
 
@@ -8,34 +12,19 @@ WITH source AS (
 
 cleaned AS (
     SELECT
-        -- Exclude columns we will recast/clean
-        * EXCEPT (
-            objectid,
-            restaurant_name,
-            legal_business_name,
-            doing_business_as_dba,
-            borough,
-            zip,
-            street,
-            bulding_number,
-            latitude,
-            longitude,
-            time_of_submission
-        ),
-
-        -- Primary key
+        
         CAST(objectid AS STRING) AS restaurant_app_id,
 
-        -- Names
+       
         TRIM(CAST(restaurant_name AS STRING)) AS restaurant_name,
         TRIM(CAST(legal_business_name AS STRING)) AS legal_business_name,
         TRIM(CAST(doing_business_as_dba AS STRING)) AS dba_name,
 
-        -- Address
+        
         CAST(bulding_number AS STRING) AS building_number,
         TRIM(CAST(street AS STRING)) AS street_name,
 
-        -- Standardize borough
+        -- Borough 
         CASE
             WHEN UPPER(TRIM(borough)) IN ('MANHATTAN', 'NEW YORK') THEN 'Manhattan'
             WHEN UPPER(TRIM(borough)) = 'BROOKLYN' THEN 'Brooklyn'
@@ -45,20 +34,20 @@ cleaned AS (
             ELSE 'UNKNOWN'
         END AS borough,
 
-        -- Clean zip
+        -- ZIP code 
         CASE
             WHEN LENGTH(CAST(zip AS STRING)) = 5 THEN CAST(zip AS STRING)
             ELSE NULL
         END AS zip_code,
 
-        -- Coordinates
-        CAST(latitude AS DECIMAL) AS latitude,
-        CAST(longitude AS DECIMAL) AS longitude,
+        
+        CAST(latitude AS NUMERIC) AS latitude,
+        CAST(longitude AS NUMERIC) AS longitude,
 
-        -- Submission time
+        -- Submission timestamp
         CAST(time_of_submission AS TIMESTAMP) AS submitted_at,
 
-        -- Flags (keep simple)
+        -- Sidewalk / Roadway seating flags
         CAST(approved_for_sidewalk_seating AS STRING) AS sidewalk_seating_flag,
         CAST(approved_for_roadway_seating AS STRING) AS roadway_seating_flag,
 
@@ -67,9 +56,8 @@ cleaned AS (
 
     FROM source
 
-    -- Basic filtering (light, since dataset is smaller)
+    -- keep primary keey
     WHERE objectid IS NOT NULL
-      AND restaurant_name IS NOT NULL
 
     -- Deduplicate
     QUALIFY ROW_NUMBER() OVER (
