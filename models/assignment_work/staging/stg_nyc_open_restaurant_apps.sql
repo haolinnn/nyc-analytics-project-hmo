@@ -28,8 +28,8 @@ cleaned AS (
         CAST(longitude AS DECIMAL) AS longitude,
         CAST(time_of_submission AS TIMESTAMP) AS submitted_at,
         CAST(seating_interest_sidewalk AS STRING) AS seating_interest_sidewalk,
-        CAST(approved_for_sidewalk_seating AS STRING) AS sidewalk_seating_flag,
-        CAST(approved_for_roadway_seating AS STRING) AS roadway_seating_flag,
+        CAST(approved_for_sidewalk_seating AS STRING) AS approved_for_sidewalk,
+        CAST(approved_for_roadway_seating AS STRING) AS approved_for_roadway,
         CURRENT_TIMESTAMP() AS _stg_loaded_at
     FROM source
     WHERE objectid IS NOT NULL

@@ -19,7 +19,7 @@ WITH seating_types AS (
 seating_dimension AS (
    SELECT
        {{ dbt_utils.generate_surrogate_key([
-           'seating_interest',
+           'seating_interest_sidewalk',
            'approved_for_sidewalk',
            'approved_for_roadway'
        ]) }} AS seating_type_key,
