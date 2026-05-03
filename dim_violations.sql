@@ -7,7 +7,7 @@ WITH all_violations AS (
            WHEN UPPER(TRIM(critical_flag)) = 'Y' THEN TRUE 
            ELSE FALSE 
        END AS is_critical
-   FROM {{ ref('stg_restaurant_inspections') }}
+   FROM {{ ref('stg_nyc_restaurant_inspection') }}
    WHERE violation_code IS NOT NULL
 ),
 

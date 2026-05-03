@@ -1,9 +1,9 @@
 -- Results dimension for restaurant health inspections
 WITH results_data AS (
     SELECT DISTINCT
-        CAST(score AS INT64) AS score, -- score to int
+        SAFE_CAST(score AS INT64) AS score,
         grade
-    FROM {{ source('staging', 'source_restaurant_health_inspections') }}
+    FROM {{ ref('stg_nyc_restaurant_inspection') }}
     WHERE score IS NOT NULL OR grade IS NOT NULL
 ),
 
